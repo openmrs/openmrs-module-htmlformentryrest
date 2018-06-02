@@ -12,7 +12,7 @@
 	<artifactId>htmlformentryrest</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Htmlformentryrest</name>
+	<name>Html Form Entry REST</name>
 	<description>no description</description>
 
 	<url>https://wiki.openmrs.org/x/FQ4z</url>
