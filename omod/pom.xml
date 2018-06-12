@@ -15,7 +15,7 @@
 
 	<properties>
 		<webservices_version>2.13</webservices_version>
-		<htmlformentry_version>1.8.1</htmlformentry_version>
+		<htmlformentry_version>3.7.0</htmlformentry_version>
 	</properties>
 
 	<dependencies>
@@ -54,10 +54,20 @@
 			<version>${webservices_version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.openmrs.module</groupId>-->
+			<!--<artifactId>htmlformentry</artifactId>-->
+			<!--<version>${htmlformentry_version}</version>-->
+		<!--</dependency>-->
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
-			<artifactId>htmlformentry</artifactId>
-			<version>${htmlformentry_version}</version>
+			<artifactId>htmlformentry-api</artifactId>
+			<version>3.8.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jettison</groupId>
+			<artifactId>jettison</artifactId>
+			<version>1.1</version>
 		</dependency>
 	</dependencies>
 
