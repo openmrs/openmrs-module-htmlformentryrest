@@ -12,7 +12,9 @@ import org.openmrs.module.htmlformentry.HtmlForm;
 import org.openmrs.module.htmlformentry.HtmlFormEntryService;
 import org.openmrs.module.htmlformentry.HtmlFormEntryUtil;
 import org.openmrs.module.htmlformentry.schema.HtmlFormSchema;
+import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.util.OpenmrsUtil;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,11 +24,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 
-public class HtmlformentryrestSchemaController {
+@Controller
+public class HtmlformentryrestSchemaController extends HtmlformentryrestRestController{
 	
 	protected final Log log = LogFactory.getLog(getClass());
 	
-	@RequestMapping(value = "/module/htmlformentryrest/htmlFormSchema", method = RequestMethod.GET)
+	@RequestMapping(value = "/htmlFormSchema", method = RequestMethod.GET)
 	public JSONObject onGet(@RequestParam(value = "id", required = false) Integer id, HttpSession httpSession)
 	        throws Exception {
 		String message = "";
@@ -38,8 +41,12 @@ public class HtmlformentryrestSchemaController {
 		} else {
 			message = "You must specify a form id to view a form schema";
 		}
-		
-		return new JSONObject("{'schema':" + generateSchema(xml, httpSession) + ", 'message' :" + message + "}");
+
+		JSONObject response = new JSONObject();
+		response.put("schema", generateSchema(xml, httpSession));
+		response.put("message", message);
+
+		return response;
 	}
 	
 	private HtmlFormSchema generateSchema(String xml, HttpSession httpSession) throws Exception {
