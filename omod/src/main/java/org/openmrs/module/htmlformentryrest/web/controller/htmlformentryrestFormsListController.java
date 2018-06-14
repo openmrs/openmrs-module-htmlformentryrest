@@ -11,9 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class htmlformentryrestFormsListController extends HtmlformentryrestRestController {
-
+	
 	protected final Log log = LogFactory.getLog(getClass());
-
+	
 	//returns the list of html forms containing the form id and the form name
 	@RequestMapping(value = "/htmlformslist", method = RequestMethod.GET)
 	protected Object getAllHtmlForms() throws Exception {

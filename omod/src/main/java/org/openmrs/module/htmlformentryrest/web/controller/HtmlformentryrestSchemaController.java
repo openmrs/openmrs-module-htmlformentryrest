@@ -25,7 +25,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 
 @Controller
-public class HtmlformentryrestSchemaController extends HtmlformentryrestRestController{
+public class HtmlformentryrestSchemaController extends HtmlformentryrestRestController {
 	
 	protected final Log log = LogFactory.getLog(getClass());
 	
@@ -41,11 +41,11 @@ public class HtmlformentryrestSchemaController extends HtmlformentryrestRestCont
 		} else {
 			message = "You must specify a form id to view a form schema";
 		}
-
+		
 		JSONObject response = new JSONObject();
 		response.put("schema", generateSchema(xml, httpSession));
 		response.put("message", message);
-
+		
 		return response;
 	}
 	
