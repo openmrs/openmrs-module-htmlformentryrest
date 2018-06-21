@@ -3,6 +3,7 @@ package org.openmrs.module.htmlformentryrest.web.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.util.JSONPObject;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
@@ -25,11 +26,12 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 
 @Controller
+@RequestMapping("/htmlFormSchema")
 public class HtmlformentryrestSchemaController extends HtmlformentryrestRestController {
 	
 	protected final Log log = LogFactory.getLog(getClass());
 	
-	@RequestMapping(value = "/htmlFormSchema", method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	public JSONObject onGet(@RequestParam(value = "id", required = false) Integer id, HttpSession httpSession)
 	        throws Exception {
 		String message = "";
