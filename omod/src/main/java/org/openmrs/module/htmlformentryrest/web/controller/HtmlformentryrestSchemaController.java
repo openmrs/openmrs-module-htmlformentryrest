@@ -27,7 +27,7 @@ import java.io.File;
 
 @Controller
 @RequestMapping("/htmlFormSchema")
-public class HtmlformentryrestSchemaController extends HtmlformentryrestRestController {
+public class HtmlformentryrestSchemaController extends BaseRestController {
 	
 	protected final Log log = LogFactory.getLog(getClass());
 	

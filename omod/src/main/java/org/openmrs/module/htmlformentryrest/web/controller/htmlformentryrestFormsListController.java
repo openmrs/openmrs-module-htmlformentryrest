@@ -10,12 +10,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-public class htmlformentryrestFormsListController extends HtmlformentryrestRestController {
+@RequestMapping("/htmlformslist")
+public class htmlformentryrestFormsListController extends BaseRestController {
 	
 	protected final Log log = LogFactory.getLog(getClass());
 	
 	//returns the list of html forms containing the form id and the form name
-	@RequestMapping(value = "/htmlformslist", method = RequestMethod.GET)
+	@RequestMapping( method = RequestMethod.GET)
 	protected Object getAllHtmlForms() throws Exception {
 		return HtmlFormEntryUtil.getService().getAllHtmlForms();
 	}

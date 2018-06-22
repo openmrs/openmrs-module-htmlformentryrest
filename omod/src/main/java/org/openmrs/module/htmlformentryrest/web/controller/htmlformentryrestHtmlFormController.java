@@ -34,8 +34,8 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Controller
-@RequestMapping("/module/htmlformentry/htmlForm")
-public class htmlformentryrestHtmlFormController extends HtmlformentryrestRestController {
+@RequestMapping("/htmlForm")
+public class htmlformentryrestHtmlFormController extends BaseRestController {
 	
 	protected final Log log = LogFactory.getLog(getClass());
 	
