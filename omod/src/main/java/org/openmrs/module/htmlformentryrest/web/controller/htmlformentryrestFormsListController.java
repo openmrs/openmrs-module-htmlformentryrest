@@ -16,7 +16,7 @@ public class htmlformentryrestFormsListController extends BaseRestController {
 	protected final Log log = LogFactory.getLog(getClass());
 	
 	//returns the list of html forms containing the form id and the form name
-	@RequestMapping( method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	protected Object getAllHtmlForms() throws Exception {
 		return HtmlFormEntryUtil.getService().getAllHtmlForms();
 	}
