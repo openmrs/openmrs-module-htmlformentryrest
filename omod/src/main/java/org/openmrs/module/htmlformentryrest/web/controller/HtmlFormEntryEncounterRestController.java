@@ -43,11 +43,11 @@ public class HtmlFormEntryEncounterRestController extends BaseRestController {
 	
 	public static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss.SSSZ");
 	
-	@RequestMapping(value = "/module/htmlformentry/encounter.json", method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
-	public JsonNode encounterSchemaAsJson(@RequestParam(value = "encounter") Encounter encounter, HttpSession httpSession)
+	public JsonNode encounterSchemaAsJson(@RequestBody Encounter encounter, HttpSession httpSession)
 	        throws Exception {
-		
+		//replace @RequestParam with manual instantiation of encounter
 		// TODO error handling-- no form?
 		ObjectMapper jackson = new ObjectMapper();
 		HtmlForm form = Context.getService(HtmlFormEntryService.class).getHtmlFormByForm(encounter.getForm());
