@@ -4,6 +4,7 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
+import org.codehaus.jettison.json.JSONObject;
 import org.openmrs.ConceptDatatype;
 import org.openmrs.Encounter;
 import org.openmrs.api.LocationService;
@@ -11,6 +12,7 @@ import org.openmrs.module.htmlformentry.FormEntryContext;
 import org.openmrs.module.htmlformentry.FormEntrySession;
 import org.openmrs.module.htmlformentry.HtmlForm;
 import org.openmrs.module.htmlformentry.HtmlFormEntryService;
+import org.openmrs.module.htmlformentry.HtmlFormEntryUtil;
 import org.openmrs.module.htmlformentry.schema.HtmlFormField;
 import org.openmrs.module.htmlformentry.schema.HtmlFormSchema;
 import org.openmrs.module.htmlformentry.schema.HtmlFormSection;
@@ -25,7 +27,10 @@ import org.openmrs.api.context.Context;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -42,18 +47,6 @@ public class HtmlFormEntryEncounterRestController extends BaseRestController {
 	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
 	public static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss.SSSZ");
-	
-	@RequestMapping(method = RequestMethod.GET)
-	@ResponseBody
-	public JsonNode encounterSchemaAsJson(@RequestBody Encounter encounter, HttpSession httpSession)
-	        throws Exception {
-		//replace @RequestParam with manual instantiation of encounter
-		// TODO error handling-- no form?
-		ObjectMapper jackson = new ObjectMapper();
-		HtmlForm form = Context.getService(HtmlFormEntryService.class).getHtmlFormByForm(encounter.getForm());
-		HtmlFormSchema schema = generateSchema(form.getXmlData(), httpSession, encounter);
-		return buildSchemaAsJsonNode(schema, jackson);
-	}
 	
 	public JsonNode buildSchemaAsJsonNode(HtmlFormSchema schema, ObjectMapper jackson) {
 		ObjectNode schemaAsJson = jackson.createObjectNode();
@@ -178,4 +171,34 @@ public class HtmlFormEntryEncounterRestController extends BaseRestController {
 		fes.getHtmlToDisplay();
 		return fes.getContext().getSchema();
 	}
+
+	@RequestMapping(method = RequestMethod.GET)
+	@ResponseBody
+	public JsonNode encounterSchemaAsJson(@RequestBody Encounter encounter, HttpSession httpSession)
+			throws Exception {
+		//replace @RequestParam with manual instantiation of encounter
+		// TODO error handling-- no form?
+		ObjectMapper jackson = new ObjectMapper();
+		HtmlForm form = Context.getService(HtmlFormEntryService.class).getHtmlFormByForm(encounter.getForm());
+		HtmlFormSchema schema = generateSchema(form.getXmlData(), httpSession, encounter);
+		return buildSchemaAsJsonNode(schema, jackson);
+	}
+
+	@RequestMapping(method=RequestMethod.DELETE)
+	public JSONObject handleRequest(@RequestParam("encounterId") Integer encounterId,
+			@RequestParam("htmlFormId") Integer htmlFormId,
+			@RequestParam(value="reason", required=false) String reason,
+			@RequestParam(value="returnUrl", required=false) String returnUrl,
+			HttpServletRequest request) throws Exception {
+		Encounter enc = Context.getEncounterService().getEncounter(encounterId);
+		Integer ptId = enc.getPatient().getPatientId();
+		HtmlFormEntryService hfes = Context.getService(HtmlFormEntryService.class);
+		HtmlForm form = hfes.getHtmlForm(htmlFormId);
+		HtmlFormEntryUtil.voidEncounter(enc, form, reason);
+		Context.getEncounterService().saveEncounter(enc);
+		JSONObject response = new JSONObject();
+		response.put("message", "voided encounter successfully");
+		return response;
+	}
+
 }
