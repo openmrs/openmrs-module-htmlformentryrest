@@ -2,8 +2,6 @@ package org.openmrs.module.htmlformentryrest.web.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.codehaus.jackson.map.util.JSONPObject;
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
@@ -13,21 +11,16 @@ import org.openmrs.module.htmlformentry.HtmlForm;
 import org.openmrs.module.htmlformentry.HtmlFormEntryService;
 import org.openmrs.module.htmlformentry.HtmlFormEntryUtil;
 import org.openmrs.module.htmlformentry.schema.HtmlFormSchema;
-import org.openmrs.module.webservices.rest.web.RestConstants;
-import org.openmrs.util.OpenmrsUtil;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
-import java.io.File;
 
 @Controller
-@RequestMapping("/htmlFormSchema")
-public class HtmlformentryrestSchemaController extends BaseRestController {
+@RequestMapping("/htmlformschema")
+public class SchemaController extends BaseRestController {
 	
 	protected final Log log = LogFactory.getLog(getClass());
 	
@@ -46,6 +39,8 @@ public class HtmlformentryrestSchemaController extends BaseRestController {
 		
 		JSONObject response = new JSONObject();
 		response.put("schema", generateSchema(xml, httpSession));
+		//discuss how the schema should look, refer the view htmlFormSchema.jsp
+		//currently returns the raw object form of the schema
 		response.put("message", message);
 		
 		return response;

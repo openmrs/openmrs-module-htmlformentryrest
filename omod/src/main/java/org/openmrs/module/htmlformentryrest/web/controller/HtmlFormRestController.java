@@ -35,7 +35,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/htmlForm")
-public class htmlformentryrestHtmlFormController extends BaseRestController {
+public class HtmlFormRestController extends BaseRestController {
 	
 	protected final Log log = LogFactory.getLog(getClass());
 	

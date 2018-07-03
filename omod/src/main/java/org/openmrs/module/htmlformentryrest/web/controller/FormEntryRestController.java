@@ -18,10 +18,8 @@ import org.openmrs.module.htmlformentry.HtmlFormEntryUtil;
 import org.openmrs.module.htmlformentry.ValidationException;
 import org.openmrs.util.OpenmrsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,7 +36,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 @RequestMapping("/htmlFormEntry")
-public class HtmlFormEntryRController extends BaseRestController {
+public class FormEntryRestController extends BaseRestController {
 	
 	protected final Log log = LogFactory.getLog(getClass());
 	
@@ -202,6 +200,7 @@ public class HtmlFormEntryRController extends BaseRestController {
 		try {
 			List<FormSubmissionError> validationErrors = session.getSubmissionController().validateSubmission(
 			    session.getContext(), request);
+			// .getContext()??
 			if (validationErrors != null && validationErrors.size() > 0) {
 				errors.reject("Fix errors");
 			}

@@ -37,7 +37,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("encounter")
-public class HtmlFormEntryEncounterRestController extends BaseRestController {
+public class EncounterRestController extends BaseRestController {
 	
 	@Autowired
 	private LocationService locationService;
