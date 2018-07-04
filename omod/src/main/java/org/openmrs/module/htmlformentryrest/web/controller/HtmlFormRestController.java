@@ -99,7 +99,25 @@ public class HtmlFormRestController extends BaseRestController {
 	
 	/**
 	 * Save changes to an HTML Form
+	 * The Request body needs to be as follows:
+	 * {
+	 *     "form":{
+	 *         "name":"",
+	 *         "description":"",
+	 *         "version":"",
+	 *         "encounterType":"",
+	 *         "creator":{
+	 *             "personName":""
+	 *         },
+	 *         "changedBy":{
+	 *             "personName":""
+	 *         },
+	 *         "published":"", //"checked" OR ""
+	 *         "xmlData":"", // the html representing the form
+	 *     }
+	 * }
 	 */
+	//TODO: add validation for encounter type and few other fields, set the dateCreated and dateChanged fields manually
 	@RequestMapping(method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
 	public JSONObject saveHtmlForm(@RequestBody HtmlForm htmlForm, BindingResult result, WebRequest request)
 	        throws Exception {
