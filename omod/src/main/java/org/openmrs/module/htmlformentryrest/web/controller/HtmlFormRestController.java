@@ -18,11 +18,8 @@ import org.openmrs.propertyeditor.EncounterTypeEditor;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -67,7 +64,7 @@ public class HtmlFormRestController extends BaseRestController {
 	/**
 	 * Show a single HTML Form
 	 */
-	@RequestMapping(method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(method = RequestMethod.GET)
 	public JSONObject showHtmlForm(HttpSession httpSession, @RequestParam(value = "id", required = false) Integer id)
 	        throws Exception {
 		
@@ -92,33 +89,21 @@ public class HtmlFormRestController extends BaseRestController {
 		}
 		
 		JSONObject response = new JSONObject();
+		//decide what all to send, as form hf contains everything
 		response.put("id", id);
+		response.put("form", hf);
 		response.put("previewHtml", previewHtml);
 		return response;
 	}
 	
 	/**
-	 * Save changes to an HTML Form
-	 * The Request body needs to be as follows:
-	 * {
-	 *     "form":{
-	 *         "name":"",
-	 *         "description":"",
-	 *         "version":"",
-	 *         "encounterType":"",
-	 *         "creator":{
-	 *             "personName":""
-	 *         },
-	 *         "changedBy":{
-	 *             "personName":""
-	 *         },
-	 *         "published":"", //"checked" OR ""
-	 *         "xmlData":"", // the html representing the form
-	 *     }
-	 * }
+	 * Save changes to an HTML Form The Request body needs to be as follows: { "form":{ "name":"",
+	 * "description":"", "version":"", "encounterType":"", "creator":{ "personName":"" },
+	 * "changedBy":{ "personName":"" }, "published":"", //"checked" OR "" "xmlData":"", // the html
+	 * representing the form } }
 	 */
 	//TODO: add validation for encounter type and few other fields, set the dateCreated and dateChanged fields manually
-	@RequestMapping(method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
+	@RequestMapping(method = RequestMethod.POST)
 	public JSONObject saveHtmlForm(@RequestBody HtmlForm htmlForm, BindingResult result, WebRequest request)
 	        throws Exception {
 		HtmlFormEntryService service = HtmlFormEntryUtil.getService();

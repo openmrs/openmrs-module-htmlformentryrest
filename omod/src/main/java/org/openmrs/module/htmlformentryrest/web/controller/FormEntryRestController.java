@@ -18,6 +18,7 @@ import org.openmrs.module.htmlformentry.HtmlFormEntryUtil;
 import org.openmrs.module.htmlformentry.ValidationException;
 import org.openmrs.util.OpenmrsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,15 +48,128 @@ public class FormEntryRestController extends BaseRestController {
 	@Autowired
 	private EncounterServiceCompatibility encounterServiceCompatibility;
 	
-	@RequestMapping(method = RequestMethod.GET)
-	public FormEntrySession showForm(HttpServletRequest request,
-	        @RequestParam(value = "patientId", required = false) Integer patientId,
-	        @RequestParam(value = "formId", required = false) Integer formId,
-	        @RequestParam(value = "htmlformId", required = false) Integer htmlFormId,
-	        @RequestParam(value = "returnUrl", required = false) String returnUrl,
-	        @RequestParam(value = "formModifiedTimestamp", required = false) Long formModifiedTimestamp,
-	        @RequestParam(value = "encounterModifiedTimestamp", required = false) Long encounterModifiedTimestamp,
-	        @RequestParam(value = "hasChangedInd", required = false) String hasChangedInd) throws Exception {
+	@RequestMapping(method = RequestMethod.GET, produces = "application/json")
+	public FormEntrySession onGet(HttpServletRequest request) throws Exception {
+		return showForm(request);
+	}
+	
+	@RequestMapping(method = RequestMethod.POST)
+	//check how fescontext is initialized
+	//handling html form submit
+	public JSONObject onPost(Errors errors, HttpServletRequest request) throws Exception {
+		FormEntrySession session = showForm(request);
+		try {
+			List<FormSubmissionError> validationErrors = session.getSubmissionController().validateSubmission(
+			    session.getContext(), request);
+			// .getContext()??
+			if (validationErrors != null && validationErrors.size() > 0) {
+				errors.reject("Fix errors");
+			}
+		}
+		catch (Exception ex) {
+			log.error("Exception during form validation", ex);
+			errors.reject("Exception during form validation, see log for more details: " + ex);
+		}
+		JSONObject response = new JSONObject();
+		if (errors.hasErrors()) {
+			response.put("errors", errors);
+			return response;
+		}
+		
+		// no form validation errors, proceed with submission
+		session.prepareForSubmit();
+		
+		if (session.getContext().getMode() == FormEntryContext.Mode.ENTER
+		        && session.hasPatientTag()
+		        && session.getPatient() == null
+		        && (session.getSubmissionActions().getPersonsToCreate() == null || session.getSubmissionActions()
+		                .getPersonsToCreate().size() == 0))
+			throw new IllegalArgumentException("This form is not going to create an Patient");
+		
+		if (session.getContext().getMode() == FormEntryContext.Mode.ENTER
+		        && session.hasEncouterTag()
+		        && (session.getSubmissionActions().getEncountersToCreate() == null || session.getSubmissionActions()
+		                .getEncountersToCreate().size() == 0))
+			throw new IllegalArgumentException("This form is not going to create an encounter");
+		
+		try {
+			session.getSubmissionController().handleFormSubmission(session, request);
+			HtmlFormEntryUtil.getService().applyActions(session);
+			response.put("message", "success");
+			/*String successView = session.getAfterSaveUrlTemplate();
+			if (successView != null) {
+				successView = successView.replaceAll("\\{\\{patient.id\\}\\}", session.getPatient().getId().toString());
+				successView = successView.replaceAll("\\{\\{encounter.id\\}\\}", session.getEncounter().getId().toString());
+				successView = request.getContextPath() + "/" + successView;
+			} else {
+				successView = session.getReturnUrlWithParameters();
+			}
+			if (successView == null)
+				successView = request.getContextPath() + "/patientDashboard.form" + getQueryPrameters(request, session);
+			if (StringUtils.hasText(request.getParameter("closeAfterSubmission"))) {
+				return new ModelAndView(closeDialogView, "dialogToClose", request.getParameter("closeAfterSubmission"));
+			} else {
+				return new ModelAndView(new RedirectView(successView));
+			}*/
+		}
+		catch (ValidationException ex) {
+			log.error("Invalid input:", ex);
+			response.put("errors", ex.getMessage());
+			errors.reject(ex.getMessage());
+		}
+		catch (BadFormDesignException ex) {
+			log.error("Bad Form Design:", ex);
+			response.put("errors", ex.getMessage());
+			errors.reject(ex.getMessage());
+		}
+		catch (Exception ex) {
+			log.error("Exception trying to submit form", ex);
+			StringWriter sw = new StringWriter();
+			ex.printStackTrace(new PrintWriter(sw));
+			errors.reject("Exception! " + ex.getMessage() + "<br/>" + sw.toString());
+			response.put("errors", "Exception! " + ex.getMessage() + "<br/>" + sw.toString());
+		}
+		
+		return response;
+	}
+	
+	public static void setVolatileUserData(String key, Object value) {
+		User u = Context.getAuthenticatedUser();
+		if (u == null) {
+			throw new APIAuthenticationException();
+		}
+		Map<String, Object> myData = volatileUserData.get(u);
+		if (myData == null) {
+			myData = new HashMap<String, Object>();
+			volatileUserData.put(u, myData);
+		}
+		myData.put(key, value);
+	}
+	
+	public FormEntrySession showForm(HttpServletRequest request) throws Exception {
+		
+		Integer patientId = null, formId = null, htmlFormId = null;
+		Long formModifiedTimestamp = null, encounterModifiedTimestamp = null;
+		String hasChangedInd = null;
+		
+		if (StringUtils.hasText(request.getParameter("patientId"))) {
+			patientId = Integer.valueOf(request.getParameter("patientId"));
+		}
+		if (StringUtils.hasText(request.getParameter("formId"))) {
+			formId = Integer.valueOf(request.getParameter("formId"));
+		}
+		if (StringUtils.hasText(request.getParameter("htmlFormId"))) {
+			htmlFormId = Integer.valueOf(request.getParameter("htmlFormId"));
+		}
+		if (StringUtils.hasText(request.getParameter("formModifiedTimestamp"))) {
+			formModifiedTimestamp = Long.valueOf(request.getParameter("formModifiedTimestamp"));
+		}
+		if (StringUtils.hasText(request.getParameter("encounterModifiedTimestamp"))) {
+			encounterModifiedTimestamp = Long.valueOf(request.getParameter("encounterModifiedTimestamp"));
+		}
+		if (StringUtils.hasText(request.getParameter("hasChangedInd"))) {
+			hasChangedInd = request.getParameter("hasChangedInd");
+		}
 		
 		long ts = System.currentTimeMillis();
 		
@@ -158,10 +272,6 @@ public class FormEntryRestController extends BaseRestController {
 			session = new FormEntrySession(patient, htmlForm, request.getSession());
 		}
 		
-		if (StringUtils.hasText(returnUrl)) {
-			session.setReturnUrl(returnUrl);
-		}
-		
 		// Since we're not using a sessionForm, we need to check for the case where the underlying form was modified while a user was filling a form out
 		if (formModifiedTimestamp != null) {
 			if (!OpenmrsUtil.nullSafeEquals(formModifiedTimestamp, session.getFormModifiedTimestamp())) {
@@ -191,98 +301,4 @@ public class FormEntryRestController extends BaseRestController {
 		
 		return session;
 	}
-	
-	@RequestMapping(method = RequestMethod.POST)
-	//check how mapping will take place btw fes and the post body(study the form / command used in the hfe module) or create a FormEntrySession manually here in the method
-	//check how fescontext is initialized
-	public JSONObject handleSubmit(@RequestBody FormEntrySession session, Errors errors, HttpServletRequest request)
-	        throws Exception {
-		try {
-			List<FormSubmissionError> validationErrors = session.getSubmissionController().validateSubmission(
-			    session.getContext(), request);
-			// .getContext()??
-			if (validationErrors != null && validationErrors.size() > 0) {
-				errors.reject("Fix errors");
-			}
-		}
-		catch (Exception ex) {
-			log.error("Exception during form validation", ex);
-			errors.reject("Exception during form validation, see log for more details: " + ex);
-		}
-		JSONObject response = new JSONObject();
-		if (errors.hasErrors()) {
-			response.put("errors", errors);
-			return response;
-		}
-		
-		// no form validation errors, proceed with submission
-		session.prepareForSubmit();
-		
-		if (session.getContext().getMode() == FormEntryContext.Mode.ENTER
-		        && session.hasPatientTag()
-		        && session.getPatient() == null
-		        && (session.getSubmissionActions().getPersonsToCreate() == null || session.getSubmissionActions()
-		                .getPersonsToCreate().size() == 0))
-			throw new IllegalArgumentException("This form is not going to create an Patient");
-		
-		if (session.getContext().getMode() == FormEntryContext.Mode.ENTER
-		        && session.hasEncouterTag()
-		        && (session.getSubmissionActions().getEncountersToCreate() == null || session.getSubmissionActions()
-		                .getEncountersToCreate().size() == 0))
-			throw new IllegalArgumentException("This form is not going to create an encounter");
-		
-		try {
-			session.getSubmissionController().handleFormSubmission(session, request);
-			HtmlFormEntryUtil.getService().applyActions(session);
-			response.put("message", "success");
-			/*String successView = session.getAfterSaveUrlTemplate();
-			if (successView != null) {
-				successView = successView.replaceAll("\\{\\{patient.id\\}\\}", session.getPatient().getId().toString());
-				successView = successView.replaceAll("\\{\\{encounter.id\\}\\}", session.getEncounter().getId().toString());
-				successView = request.getContextPath() + "/" + successView;
-			} else {
-				successView = session.getReturnUrlWithParameters();
-			}
-			if (successView == null)
-				successView = request.getContextPath() + "/patientDashboard.form" + getQueryPrameters(request, session);
-			if (StringUtils.hasText(request.getParameter("closeAfterSubmission"))) {
-				return new ModelAndView(closeDialogView, "dialogToClose", request.getParameter("closeAfterSubmission"));
-			} else {
-				return new ModelAndView(new RedirectView(successView));
-			}*/
-		}
-		catch (ValidationException ex) {
-			log.error("Invalid input:", ex);
-			response.put("errors", ex.getMessage());
-			errors.reject(ex.getMessage());
-		}
-		catch (BadFormDesignException ex) {
-			log.error("Bad Form Design:", ex);
-			response.put("errors", ex.getMessage());
-			errors.reject(ex.getMessage());
-		}
-		catch (Exception ex) {
-			log.error("Exception trying to submit form", ex);
-			StringWriter sw = new StringWriter();
-			ex.printStackTrace(new PrintWriter(sw));
-			errors.reject("Exception! " + ex.getMessage() + "<br/>" + sw.toString());
-			response.put("errors", "Exception! " + ex.getMessage() + "<br/>" + sw.toString());
-		}
-		
-		return response;
-	}
-	
-	public static void setVolatileUserData(String key, Object value) {
-		User u = Context.getAuthenticatedUser();
-		if (u == null) {
-			throw new APIAuthenticationException();
-		}
-		Map<String, Object> myData = volatileUserData.get(u);
-		if (myData == null) {
-			myData = new HashMap<String, Object>();
-			volatileUserData.put(u, myData);
-		}
-		myData.put(key, value);
-	}
-	
 }

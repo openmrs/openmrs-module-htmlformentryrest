@@ -8,6 +8,7 @@ import org.codehaus.jettison.json.JSONObject;
 import org.openmrs.ConceptDatatype;
 import org.openmrs.Encounter;
 import org.openmrs.api.LocationService;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.htmlformentry.FormEntryContext;
 import org.openmrs.module.htmlformentry.FormEntrySession;
 import org.openmrs.module.htmlformentry.HtmlForm;
@@ -23,12 +24,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.openmrs.api.context.Context;
+
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -171,25 +170,22 @@ public class EncounterRestController extends BaseRestController {
 		fes.getHtmlToDisplay();
 		return fes.getContext().getSchema();
 	}
-
+	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
-	public JsonNode encounterSchemaAsJson(@RequestBody Encounter encounter, HttpSession httpSession)
-			throws Exception {
-		//replace @RequestParam with manual instantiation of encounter
-		// TODO error handling-- no form?
+	public JsonNode encounterSchemaAsJson(@RequestParam("encounterId") Integer encounterId, HttpSession httpSession) throws Exception {
+		Encounter encounter = Context.getEncounterService().getEncounter(encounterId);		// TODO error handling-- no form?
 		ObjectMapper jackson = new ObjectMapper();
 		HtmlForm form = Context.getService(HtmlFormEntryService.class).getHtmlFormByForm(encounter.getForm());
 		HtmlFormSchema schema = generateSchema(form.getXmlData(), httpSession, encounter);
 		return buildSchemaAsJsonNode(schema, jackson);
 	}
-
-	@RequestMapping(method=RequestMethod.DELETE)
+	
+	@RequestMapping(method = RequestMethod.DELETE)
 	public JSONObject handleRequest(@RequestParam("encounterId") Integer encounterId,
-			@RequestParam("htmlFormId") Integer htmlFormId,
-			@RequestParam(value="reason", required=false) String reason,
-			@RequestParam(value="returnUrl", required=false) String returnUrl,
-			HttpServletRequest request) throws Exception {
+	        @RequestParam("htmlFormId") Integer htmlFormId, @RequestParam(value = "reason", required = false) String reason,
+	        @RequestParam(value = "returnUrl", required = false) String returnUrl, HttpServletRequest request)
+	        throws Exception {
 		Encounter enc = Context.getEncounterService().getEncounter(encounterId);
 		Integer ptId = enc.getPatient().getPatientId();
 		HtmlFormEntryService hfes = Context.getService(HtmlFormEntryService.class);
@@ -200,5 +196,5 @@ public class EncounterRestController extends BaseRestController {
 		response.put("message", "voided encounter successfully");
 		return response;
 	}
-
+	
 }
