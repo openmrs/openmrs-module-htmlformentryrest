@@ -16,6 +16,7 @@ import org.openmrs.module.htmlformentry.FormSubmissionError;
 import org.openmrs.module.htmlformentry.HtmlForm;
 import org.openmrs.module.htmlformentry.HtmlFormEntryUtil;
 import org.openmrs.module.htmlformentry.ValidationException;
+import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.util.OpenmrsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -33,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-@RequestMapping("/htmlFormEntry")
+@RequestMapping("/rest/" + RestConstants.VERSION_1 + "/htmlformentryrest/htmlFormEntry")
 public class FormEntryRestController extends HFERBaseRestController {
 	
 	protected final Log log = LogFactory.getLog(getClass());

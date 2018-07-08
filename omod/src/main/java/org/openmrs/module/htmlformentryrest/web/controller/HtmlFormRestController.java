@@ -14,6 +14,7 @@ import org.openmrs.module.htmlformentry.HtmlForm;
 import org.openmrs.module.htmlformentry.HtmlFormEntryService;
 import org.openmrs.module.htmlformentry.HtmlFormEntryUtil;
 import org.openmrs.module.htmlformentry.HtmlFormValidator;
+import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.propertyeditor.EncounterTypeEditor;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -31,7 +32,8 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Controller
-@RequestMapping("/htmlForm")
+
+@RequestMapping("/rest/" + RestConstants.VERSION_1 + "/htmlformentryrest/htmlForm")
 public class HtmlFormRestController extends HFERBaseRestController {
 	
 	protected final Log log = LogFactory.getLog(getClass());
