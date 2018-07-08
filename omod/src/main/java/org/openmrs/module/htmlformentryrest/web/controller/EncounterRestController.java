@@ -22,7 +22,6 @@ import org.openmrs.module.htmlformentry.schema.ObsGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,7 +35,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("encounter")
-public class EncounterRestController extends BaseRestController {
+public class EncounterRestController extends HFERBaseRestController {
 	
 	@Autowired
 	private LocationService locationService;
@@ -173,8 +172,9 @@ public class EncounterRestController extends BaseRestController {
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
-	public JsonNode encounterSchemaAsJson(@RequestParam("encounterId") Integer encounterId, HttpSession httpSession) throws Exception {
-		Encounter encounter = Context.getEncounterService().getEncounter(encounterId);		// TODO error handling-- no form?
+	public JsonNode encounterSchemaAsJson(@RequestParam("encounterId") Integer encounterId, HttpSession httpSession)
+	        throws Exception {
+		Encounter encounter = Context.getEncounterService().getEncounter(encounterId); // TODO error handling-- no form?
 		ObjectMapper jackson = new ObjectMapper();
 		HtmlForm form = Context.getService(HtmlFormEntryService.class).getHtmlFormByForm(encounter.getForm());
 		HtmlFormSchema schema = generateSchema(form.getXmlData(), httpSession, encounter);

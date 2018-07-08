@@ -15,16 +15,11 @@
 
 	<properties>
 		<webservices_version>2.13</webservices_version>
-		<htmlformentry_version>3.7.0</htmlformentry_version>
+		<htmlformentry_version>3.8.0-SNAPSHOT</htmlformentry_version>
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.openmrs.module</groupId>
-			<artifactId>htmlformentryrest-api</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
-		<dependency>
+		<!--<dependency>
 			<groupId>org.openmrs.web</groupId>
 			<artifactId>openmrs-web</artifactId>
 			<scope>provided</scope>
@@ -34,7 +29,7 @@
 			<artifactId>openmrs-web</artifactId>
 			<scope>provided</scope>
 			<classifier>tests</classifier>
-		</dependency>
+		</dependency>-->
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>webservices.rest-omod</artifactId>
@@ -62,7 +57,12 @@
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>htmlformentry-api</artifactId>
-			<version>3.8.0-SNAPSHOT</version>
+			<version>${htmlformentry_version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>htmlformentryrest-api</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.jettison</groupId>

@@ -53,6 +53,36 @@
 	</pluginRepositories>
 
 	<properties>
-		<openmrsPlatformVersion>1.11.6</openmrsPlatformVersion>
+		<openmrsPlatformVersion>1.9.9</openmrsPlatformVersion>
 	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.openmrs.web</groupId>
+			<artifactId>openmrs-web</artifactId>
+			<version>${openmrsPlatformVersion}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.openmrs.web</groupId>
+			<artifactId>openmrs-web</artifactId>
+			<version>${openmrsPlatformVersion}</version>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.openmrs.api</groupId>
+			<artifactId>openmrs-api</artifactId>
+			<version>${openmrsPlatformVersion}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.openmrs.api</groupId>
+			<artifactId>openmrs-api</artifactId>
+			<version>${openmrsPlatformVersion}</version>
+			<classifier>tests</classifier>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
 </project>

@@ -20,7 +20,7 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/htmlformschema")
-public class SchemaController extends BaseRestController {
+public class SchemaController extends HFERBaseRestController {
 	
 	protected final Log log = LogFactory.getLog(getClass());
 	

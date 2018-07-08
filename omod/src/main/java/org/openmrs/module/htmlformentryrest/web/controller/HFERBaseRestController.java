@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/rest/" + RestConstants.VERSION_1 + "/htmlformentryrest")
-public class BaseRestController extends MainResourceController {
+public class HFERBaseRestController extends MainResourceController {
 	
 	@Override
 	public String getNamespace() {

@@ -32,7 +32,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/htmlForm")
-public class HtmlFormRestController extends BaseRestController {
+public class HtmlFormRestController extends HFERBaseRestController {
 	
 	protected final Log log = LogFactory.getLog(getClass());
 	
