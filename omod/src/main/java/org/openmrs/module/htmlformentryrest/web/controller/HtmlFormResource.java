@@ -1,3 +1,4 @@
+/*
 package org.openmrs.module.htmlformentryrest.web.controller;
 
 import org.openmrs.api.context.Context;
@@ -67,3 +68,4 @@ public class HtmlFormResource extends DelegatingCrudResource<HtmlForm> {
 		return description;
 	}
 }
+*/

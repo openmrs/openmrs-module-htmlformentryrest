@@ -53,7 +53,7 @@
 	</pluginRepositories>
 
 	<properties>
-		<openmrsPlatformVersion>1.9.9</openmrsPlatformVersion>
+		<openmrsPlatformVersion>1.11.6</openmrsPlatformVersion>
 	</properties>
 
 	<dependencies>

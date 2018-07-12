@@ -32,7 +32,6 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Controller
-
 @RequestMapping("/rest/" + RestConstants.VERSION_1 + "/htmlformentryrest/htmlForm")
 public class HtmlFormRestController extends HFERBaseRestController {
 	
