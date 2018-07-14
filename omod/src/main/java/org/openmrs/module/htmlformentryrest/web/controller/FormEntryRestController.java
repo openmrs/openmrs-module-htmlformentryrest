@@ -24,6 +24,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.openmrs.module.htmlformentry.compatibility.EncounterServiceCompatibility;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.PrintWriter;
@@ -34,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-@RequestMapping("/rest/" + RestConstants.VERSION_1 + "/htmlformentryrest/htmlFormEntry")
+@RequestMapping(value = "/rest/" + RestConstants.VERSION_1 + "/htmlformentryrest")
 public class FormEntryRestController extends HFERBaseRestController {
 	
 	protected final Log log = LogFactory.getLog(getClass());
@@ -46,12 +47,14 @@ public class FormEntryRestController extends HFERBaseRestController {
 	@Autowired
 	private EncounterServiceCompatibility encounterServiceCompatibility;
 	
-	@RequestMapping(method = RequestMethod.GET/*, produces = "application/json"*/)
+	@RequestMapping(value = "htmlformentry", method = RequestMethod.GET/*, produces = "application/json"*/)
+	@ResponseBody
 	public FormEntrySession onGet(HttpServletRequest request) throws Exception {
 		return showForm(request);
 	}
 	
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value = "htmlformentry", method = RequestMethod.POST)
+	@ResponseBody
 	//check how fescontext is initialized
 	//handling html form submit
 	public JSONObject onPost(Errors errors, HttpServletRequest request) throws Exception {

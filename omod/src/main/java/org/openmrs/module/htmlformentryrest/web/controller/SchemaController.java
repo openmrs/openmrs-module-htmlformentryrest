@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/rest/" + RestConstants.VERSION_1 + "/htmlformentryrest/htmlformschema")
+@RequestMapping(value = "/rest/" + RestConstants.VERSION_1 + "/htmlformentryrest")
 public class SchemaController extends HFERBaseRestController {
 	
 	protected final Log log = LogFactory.getLog(getClass());
 	
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value = "/htmlformschema",method = RequestMethod.GET)
 	public JSONObject onGet(@RequestParam(value = "id", required = false) Integer id, HttpSession httpSession)
 	        throws Exception {
 		String message = "";

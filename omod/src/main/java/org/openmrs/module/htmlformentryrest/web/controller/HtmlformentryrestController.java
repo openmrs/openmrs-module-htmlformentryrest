@@ -48,7 +48,7 @@ public class HtmlformentryrestController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	public String onGet() {
-		return VIEW;
+		return "abx";
 	}
 	
 	/**

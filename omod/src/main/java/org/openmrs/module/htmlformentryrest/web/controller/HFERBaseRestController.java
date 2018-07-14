@@ -18,12 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author owais.hussain@ihsinformatics.com
  */
 @Controller
-@RequestMapping("/rest/" + RestConstants.VERSION_1 + "/htmlformentryrest")
+@RequestMapping(value = "/rest/**")
 public class HFERBaseRestController extends MainResourceController {
 	
 	@Override
 	public String getNamespace() {
-		return RestConstants.VERSION_1 + "/htmlformentryrest";
+		//return RestConstants.VERSION_1 + "/htmlformentryrest";
+		return RestConstants.VERSION_1;
 	}
 	
 }
