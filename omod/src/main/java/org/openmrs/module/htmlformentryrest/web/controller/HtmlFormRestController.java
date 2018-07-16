@@ -32,13 +32,13 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/rest/" + RestConstants.VERSION_1 + "/htmlformentryrest")
+@RequestMapping(value = "/rest/" + RestConstants.VERSION_1 + "/htmlformentryrest/htmlform")
 public class HtmlFormRestController {
 	
 	/**
 	 * Show a single HTML Form
 	 */
-	@RequestMapping(value = "htmlform", method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	public JSONObject showHtmlForm(HttpSession httpSession, @RequestParam(value = "id", required = false) Integer id)
 	        throws Exception {
 		
@@ -77,7 +77,7 @@ public class HtmlFormRestController {
 	 * representing the form } }
 	 */
 	//TODO: add validation for encounter type and few other fields, set the dateCreated and dateChanged fields manually
-	@RequestMapping(value = "htmlform", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	public JSONObject saveHtmlForm(@RequestBody HtmlForm htmlForm, BindingResult result, WebRequest request)
 	        throws Exception {
 		HtmlFormEntryService service = HtmlFormEntryUtil.getService();
@@ -103,21 +103,21 @@ public class HtmlFormRestController {
 		}
 		return response;
 	}
-
+	
 	protected final Log log = LogFactory.getLog(getClass());
-
+	
 	/*@InitBinder
 	public void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(EncounterType.class, new EncounterTypeEditor());
 		binder.registerCustomEditor(java.util.Date.class,
 				new CustomDateEditor(SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT, Context.getLocale()), true));
 	}*/
-
+	
 	/*@ModelAttribute("encounterTypes")
 	List<EncounterType> getEncounterTypes() {
 		return Context.getEncounterService().getAllEncounterTypes();
 	}*/
-
+	
 	HtmlForm formBackingObject(Integer id) {
 		if (id != null) {
 			HtmlForm hf = HtmlFormEntryUtil.getService().getHtmlForm(id);

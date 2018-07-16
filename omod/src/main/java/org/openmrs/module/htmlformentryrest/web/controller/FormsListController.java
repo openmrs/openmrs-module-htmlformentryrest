@@ -17,14 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/rest/" + RestConstants.VERSION_1 + "/htmlformentryrest")
+@RequestMapping(value = "/rest/" + RestConstants.VERSION_1 + "/htmlformentryrest/htmlformslist")
 public class FormsListController extends HFERBaseRestController {
 	
 	protected final Log log = LogFactory.getLog(getClass());
 	
 	//returns the list of html forms containing the form id and the form name
 	//returns the whole html form element for now, discuss if we want to limit what fields in each form we want to send.
-	@RequestMapping(value = "/htmlformslist", method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	protected Object getAllHtmlForms() throws Exception {
 		List<HtmlForm> hflist = HtmlFormEntryUtil.getService().getAllHtmlForms();

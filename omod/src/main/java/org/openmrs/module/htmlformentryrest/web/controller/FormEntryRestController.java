@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-@RequestMapping(value = "/rest/" + RestConstants.VERSION_1 + "/htmlformentryrest")
+@RequestMapping(value = "/rest/" + RestConstants.VERSION_1 + "/htmlformentryrest/htmlformentry")
 public class FormEntryRestController extends HFERBaseRestController {
 	
 	protected final Log log = LogFactory.getLog(getClass());
@@ -47,13 +47,13 @@ public class FormEntryRestController extends HFERBaseRestController {
 	@Autowired
 	private EncounterServiceCompatibility encounterServiceCompatibility;
 	
-	@RequestMapping(value = "htmlformentry", method = RequestMethod.GET/*, produces = "application/json"*/)
+	@RequestMapping(method = RequestMethod.GET/*, produces = "application/json"*/)
 	@ResponseBody
 	public FormEntrySession onGet(HttpServletRequest request) throws Exception {
 		return showForm(request);
 	}
 	
-	@RequestMapping(value = "htmlformentry", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	//check how fescontext is initialized
 	//handling html form submit
