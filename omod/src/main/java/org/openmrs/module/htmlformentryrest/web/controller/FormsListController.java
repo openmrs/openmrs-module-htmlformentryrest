@@ -2,6 +2,7 @@ package org.openmrs.module.htmlformentryrest.web.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.annotation.Authorized;
 import org.openmrs.module.htmlformentry.HtmlForm;
 import org.openmrs.module.htmlformentry.HtmlFormEntryUtil;
 import org.openmrs.module.htmlformentryrest.HtmlFormShort;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@Authorized
 @RequestMapping(value = "/rest/" + RestConstants.VERSION_1 + "/htmlformentryrest/htmlformslist")
 public class FormsListController extends HFERBaseRestController {
 	

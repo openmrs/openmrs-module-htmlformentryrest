@@ -22,6 +22,7 @@ import org.openmrs.module.htmlformentry.schema.HtmlFormSchema;
 import org.openmrs.module.htmlformentry.schema.HtmlFormSection;
 import org.openmrs.module.htmlformentry.schema.ObsField;
 import org.openmrs.module.htmlformentry.schema.ObsGroup;
+import org.openmrs.module.htmlformentryrest.EncounterShort;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -47,19 +48,36 @@ public class EncounterRestController extends HFERBaseRestController {
 	@ResponseBody
 	public Object encounterSchemaAsJson(@RequestParam("encounterId") Integer encounterId, HttpSession httpSession)
 	        throws Exception {
-		Encounter encounter = null;
+		HashMap<Object, Object> response = new HashMap<Object, Object>();
 		try {
+			Encounter encounter = null;
 			encounter = Context.getEncounterService().getEncounter(encounterId); // TODO error handling-- no form?
-			ObjectMapper jackson = new ObjectMapper();
-			HtmlForm form = Context.getService(HtmlFormEntryService.class).getHtmlFormByForm(encounter.getForm());
-			HtmlFormSchema schema = generateSchema(form.getXmlData(), httpSession, encounter);
-			JsonNode jn = buildSchemaAsJsonNode(schema, jackson);
+			if (encounter != null) {
+				HtmlForm form = Context.getService(HtmlFormEntryService.class).getHtmlFormByForm(encounter.getForm());
+				if (form != null) {
+					HtmlFormSchema schema = generateSchema(form.getXmlData(), httpSession, encounter);
+					ObjectMapper jackson = new ObjectMapper();
+					JsonNode jn = buildSchemaAsJsonNode(schema, jackson);
+					response.put(
+					    "encounter",
+					    new EncounterShort(encounter.getEncounterId(), encounter.getEncounterDatetime(), encounter
+					            .getPatient(), encounter.getPatient().getPatientId(), encounter.getLocation(), encounter
+					            .getForm(), encounter.getEncounterType(), encounter.getOrders(), encounter.getObs(),
+					            encounter.getVisit()));
+					response.put("mapped encounter", jn);
+				} else {
+					response.put("message", "Sorry! The encounter id is not associated with any html form");
+				}
+			} else {
+				response.put("message", "Encounter with this encounter id does not exist");
+			}
+			
 		}
 		catch (Exception e) {
 			log.error(e);
 		}
 		
-		return encounter;
+		return response;
 	}
 	
 	@RequestMapping(method = RequestMethod.DELETE)
