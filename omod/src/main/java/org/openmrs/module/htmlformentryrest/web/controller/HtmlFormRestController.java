@@ -109,6 +109,7 @@ public class HtmlFormRestController extends HFERBaseRestController {
 	@ResponseBody
 	public Object saveHtmlForm(/*@RequestBody HtmlForm htmlForm,*/HttpServletRequest request, HttpSession session)
 	        throws Exception {
+		Context.authenticate(request.getParameter("username"), request.getParameter("password"));
 		
 		Errors result = new Errors() {
 			

@@ -86,6 +86,7 @@ public class EncounterRestController extends HFERBaseRestController {
 	        @RequestParam("htmlFormId") Integer htmlFormId, @RequestParam(value = "reason", required = false) String reason,
 	        @RequestParam(value = "returnUrl", required = false) String returnUrl, HttpServletRequest request)
 	        throws Exception {
+		Context.authenticate(request.getParameter("username"), request.getParameter("password"));
 		Encounter enc = Context.getEncounterService().getEncounter(encounterId);
 		Integer ptId = enc.getPatient().getPatientId();
 		HtmlFormEntryService hfes = Context.getService(HtmlFormEntryService.class);

@@ -1,5 +1,6 @@
 package org.openmrs.module.htmlformentryrest.web.controller;
 
+import net.sf.saxon.Err;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jettison.json.JSONObject;
@@ -7,6 +8,7 @@ import org.openmrs.Encounter;
 import org.openmrs.Form;
 import org.openmrs.Patient;
 import org.openmrs.User;
+import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIAuthenticationException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.htmlformentry.BadFormDesignException;
@@ -19,8 +21,11 @@ import org.openmrs.module.htmlformentry.ValidationException;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.util.OpenmrsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.openmrs.module.htmlformentry.compatibility.EncounterServiceCompatibility;
@@ -36,6 +41,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 @RequestMapping(value = "/rest/" + RestConstants.VERSION_1 + "/htmlformentryrest/htmlformentry")
+@Controller
 public class FormEntryRestController extends HFERBaseRestController {
 	
 	protected final Log log = LogFactory.getLog(getClass());
@@ -47,17 +53,192 @@ public class FormEntryRestController extends HFERBaseRestController {
 	@Autowired
 	private EncounterServiceCompatibility encounterServiceCompatibility;
 	
-	@RequestMapping(method = RequestMethod.GET/*, produces = "application/json"*/)
+	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
-	public FormEntrySession onGet(HttpServletRequest request) throws Exception {
-		return showForm(request);
+	public Object getformentry(HttpServletRequest request) throws Exception {
+		
+		Context.authenticate(request.getParameter("username"), request.getParameter("password"));
+		
+		FormEntrySession fes = showForm(request);
+		HashMap<Object, Object> response = new HashMap<Object, Object>();
+		response.put("patientPersonName", fes.getPatientPersonName());
+		response.put("formName", fes.getFormName());
+		response.put("encounterTypeName", fes.getFormEncounterTypeName());
+		response.put("encounterFormName", fes.getEncounterFormName());
+		response.put("encounterTypeName", fes.getEncounterEncounterTypeName());
+		response.put("encounterDatetime", fes.getEncounter().getEncounterDatetime());
+		response.put("encounterLocationName", fes.getEncounterLocationName());
+		response.put("context.mode", fes.getContext().getMode());
+		response.put("patient.personId", fes.getPatient().getPersonId());
+		response.put("htmlFormId", fes.getHtmlFormId());
+		response.put("formModifiedTimeStamp", fes.getFormModifiedTimestamp());
+		response.put("encounterModifiedTimeStamp", fes.getEncounterModifiedTimestamp());
+		response.put("encounterId", fes.getEncounter().getEncounterId());
+		response.put("hasChangedId", fes.getHasChangedInd());
+		response.put("GuessingInd", fes.getContext().getGuessingInd());
+		response.put("htmlToDisplay", fes.getHtmlToDisplay());
+		response.put("fieldAccessorJavascript", fes.getFieldAccessorJavascript());
+		//log.error(response.toString());
+		return response;
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseBody
 	//check how fescontext is initialized
 	//handling html form submit
-	public JSONObject onPost(Errors errors, HttpServletRequest request) throws Exception {
+	//http://localhost:8080/openmrs/module/htmlformentry/htmlFormEntry.form?encounterId=393&mode=EDIT
+	public Object onPost(HttpServletRequest request) throws Exception {
+		
+		Errors errors = new Errors() {
+			
+			@Override
+			public String getObjectName() {
+				return null;
+			}
+			
+			@Override
+			public void setNestedPath(String s) {
+				
+			}
+			
+			@Override
+			public String getNestedPath() {
+				return null;
+			}
+			
+			@Override
+			public void pushNestedPath(String s) {
+				
+			}
+			
+			@Override
+			public void popNestedPath() throws IllegalStateException {
+				
+			}
+			
+			@Override
+			public void reject(String s) {
+				
+			}
+			
+			@Override
+			public void reject(String s, String s1) {
+				
+			}
+			
+			@Override
+			public void reject(String s, Object[] objects, String s1) {
+				
+			}
+			
+			@Override
+			public void rejectValue(String s, String s1) {
+				
+			}
+			
+			@Override
+			public void rejectValue(String s, String s1, String s2) {
+				
+			}
+			
+			@Override
+			public void rejectValue(String s, String s1, Object[] objects, String s2) {
+				
+			}
+			
+			@Override
+			public void addAllErrors(Errors errors) {
+				
+			}
+			
+			@Override
+			public boolean hasErrors() {
+				return false;
+			}
+			
+			@Override
+			public int getErrorCount() {
+				return 0;
+			}
+			
+			@Override
+			public List<ObjectError> getAllErrors() {
+				return null;
+			}
+			
+			@Override
+			public boolean hasGlobalErrors() {
+				return false;
+			}
+			
+			@Override
+			public int getGlobalErrorCount() {
+				return 0;
+			}
+			
+			@Override
+			public List<ObjectError> getGlobalErrors() {
+				return null;
+			}
+			
+			@Override
+			public ObjectError getGlobalError() {
+				return null;
+			}
+			
+			@Override
+			public boolean hasFieldErrors() {
+				return false;
+			}
+			
+			@Override
+			public int getFieldErrorCount() {
+				return 0;
+			}
+			
+			@Override
+			public List<FieldError> getFieldErrors() {
+				return null;
+			}
+			
+			@Override
+			public FieldError getFieldError() {
+				return null;
+			}
+			
+			@Override
+			public boolean hasFieldErrors(String s) {
+				return false;
+			}
+			
+			@Override
+			public int getFieldErrorCount(String s) {
+				return 0;
+			}
+			
+			@Override
+			public List<FieldError> getFieldErrors(String s) {
+				return null;
+			}
+			
+			@Override
+			public FieldError getFieldError(String s) {
+				return null;
+			}
+			
+			@Override
+			public Object getFieldValue(String s) {
+				return null;
+			}
+			
+			@Override
+			public Class<?> getFieldType(String s) {
+				return null;
+			}
+		};
+		
+		Context.authenticate(request.getParameter("username"), request.getParameter("password"));
+		
 		FormEntrySession session = showForm(request);
 		try {
 			List<FormSubmissionError> validationErrors = session.getSubmissionController().validateSubmission(
@@ -71,7 +252,7 @@ public class FormEntryRestController extends HFERBaseRestController {
 			log.error("Exception during form validation", ex);
 			errors.reject("Exception during form validation, see log for more details: " + ex);
 		}
-		JSONObject response = new JSONObject();
+		HashMap<Object, Object> response = new HashMap<Object, Object>();
 		if (errors.hasErrors()) {
 			response.put("errors", errors);
 			return response;
