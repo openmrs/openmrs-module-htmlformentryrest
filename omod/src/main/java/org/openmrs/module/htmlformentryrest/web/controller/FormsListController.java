@@ -35,7 +35,5 @@ public class FormsListController extends HFERBaseRestController {
 			response.add(new HtmlFormShort(hflist.get(i).getName(), hflist.get(i).getId()));
 		}
 		return response;
-		//ObjectMapper mapperObj = new ObjectMapper();
-		//return mapperObj.writeValueAsString(response);
 	}
 }

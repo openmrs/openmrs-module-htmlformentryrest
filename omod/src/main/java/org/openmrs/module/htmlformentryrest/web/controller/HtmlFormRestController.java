@@ -1,22 +1,14 @@
 package org.openmrs.module.htmlformentryrest.web.controller;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.beans.PropertyEditor;
-import java.beans.PropertyEditorSupport;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
 import org.openmrs.EncounterType;
 import org.openmrs.Form;
 import org.openmrs.Patient;
-import org.openmrs.User;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.htmlformentry.FormEntrySession;
@@ -29,7 +21,6 @@ import org.openmrs.propertyeditor.EncounterTypeEditor;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.PropertyEditorRegistry;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;

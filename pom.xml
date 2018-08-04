@@ -13,7 +13,7 @@
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Html Form Entry REST</name>
-	<description>no description</description>
+	<description>rest wrapper for HFE module</description>
 
 	<url>https://wiki.openmrs.org/x/FQ4z</url>
 
@@ -53,7 +53,7 @@
 	</pluginRepositories>
 
 	<properties>
-		<openmrsPlatformVersion>1.11.6</openmrsPlatformVersion>
+		<openmrsPlatformVersion>1.9.9</openmrsPlatformVersion>
 		<webservices_version>2.13</webservices_version>
 		<htmlformentry_version>3.8.0-SNAPSHOT</htmlformentry_version>
 	</properties>
@@ -102,6 +102,13 @@
 			<artifactId>openmrs-api</artifactId>
 			<version>${openmrsPlatformVersion}</version>
 			<classifier>tests</classifier>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.openmrs.test</groupId>
+			<artifactId>openmrs-test</artifactId>
+			<version>${openmrsPlatformVersion}</version>
+			<type>pom</type>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

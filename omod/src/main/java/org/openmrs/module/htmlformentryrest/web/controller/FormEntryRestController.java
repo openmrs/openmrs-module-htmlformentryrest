@@ -5,9 +5,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jettison.json.JSONObject;
 import org.openmrs.Encounter;
+import org.openmrs.EncounterType;
 import org.openmrs.Form;
+import org.openmrs.Location;
 import org.openmrs.Patient;
+import org.openmrs.Provider;
 import org.openmrs.User;
+import org.openmrs.Visit;
+import org.openmrs.VisitType;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIAuthenticationException;
 import org.openmrs.api.context.Context;
@@ -34,7 +39,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,8 +57,18 @@ public class FormEntryRestController extends HFERBaseRestController {
 	
 	public final static String FORM_IN_PROGRESS_KEY = "HTML_FORM_IN_PROGRESS_KEY";
 	
-	@Autowired
-	private EncounterServiceCompatibility encounterServiceCompatibility;
+	//@Autowired
+	private EncounterServiceCompatibility encounterServiceCompatibility = new EncounterServiceCompatibility() {
+		
+		@Override
+		public List<Encounter> getEncounters(Patient who, Location loc, Date fromDate, Date toDate,
+		        Collection<Form> enteredViaForms, Collection<EncounterType> encounterTypes, Collection<Provider> providers,
+		        Collection<VisitType> visitTypes, Collection<Visit> visits, boolean includeVoided) {
+			
+			return Context.getEncounterService().getEncounters(who, loc, fromDate, toDate, enteredViaForms, encounterTypes,
+			    providers, visitTypes, visits, includeVoided);
+		}
+	};
 	
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody

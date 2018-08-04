@@ -107,6 +107,11 @@
 		<file>messages_es.properties</file>
 	</messages>
 	<!-- /Internationalization -->
-	
+
+	<hibernate-configuration>
+		<session-factory>
+			<mapping resource="HtmlFormEntryHtmlForm.hbm.xml" />
+		</session-factory>
+	</hibernate-configuration>
 </module>
 
