@@ -107,11 +107,16 @@
 		<file>messages_es.properties</file>
 	</messages>
 	<!-- /Internationalization -->
+	<mappingFiles>
+		HtmlFormEntryHtmlForm.hbm.xml
+	</mappingFiles>
 
-	<hibernate-configuration>
-		<session-factory>
-			<mapping resource="HtmlFormEntryHtmlForm.hbm.xml" />
-		</session-factory>
-	</hibernate-configuration>
+	<!--<hibernate-configuration>-->
+		<!--<session-factory>-->
+			<!--<mapping resource="HtmlFormEntryHtmlForm.hbm.xml" />-->
+			<!--<mapping resource="LabSupplyItem.hbm.xml" />-->
+			<!--<mapping resource="RuleDefinition.hbm.xml" />-->
+		<!--</session-factory>-->
+	<!--</hibernate-configuration>-->
 </module>
 

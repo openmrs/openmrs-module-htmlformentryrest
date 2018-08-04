@@ -45,11 +45,6 @@
         </property>
     </bean>
 
-
-    <bean id="serviceContext" class="org.openmrs.api.context.ServiceContext" factory-method="getInstance" destroy-method="destroyInstance">
-
-    </bean>
-
     <!-- Adds HtmlformentryrestService to OpenMRS context so it can be accessed
     calling Context.getService(HtmlformentryrestService.class) -->
     <bean parent="serviceContext">
