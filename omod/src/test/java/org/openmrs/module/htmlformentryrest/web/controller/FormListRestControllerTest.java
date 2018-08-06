@@ -11,8 +11,12 @@ import org.openmrs.api.context.Context;
 //import org.openmrs.module.webservices.rest.web.RestConstants;
 //import org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceController;
 //import org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceControllerTest;
+import org.openmrs.module.webservices.rest.SimpleObject;
+import org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceControllerTest;
 import org.openmrs.test.BaseContextSensitiveTest;
 import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.bind.annotation.RequestMethod;
 //import org.springframework.mock.web.MockHttpServletRequest;
 //import org.springframework.mock.web.MockHttpServletResponse;
 //import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,14 +28,24 @@ import java.util.Iterator;
 
 import static org.junit.Assert.assertEquals;
 
-public class FormListRestControllerTest extends BaseModuleWebContextSensitiveTest {
-	
+public class FormListRestControllerTest extends MainResourceControllerTest {
+
 	public static final String DATA_XML = "include/HtmlformentryRestTestService-initialData.xml";
 
 	public String getURI() {
 		return "/htmlformentryrest/htmlformslist";
 	}
-	
+
+	@Override
+	public String getUuid() {
+		return null;
+	}
+
+	@Override
+	public long getAllCount() {
+		return 0;
+	}
+
 	@Before
 	public void setUp() throws Exception {
 		initializeInMemoryDatabase();
@@ -40,13 +54,15 @@ public class FormListRestControllerTest extends BaseModuleWebContextSensitiveTes
 		getConnection().prepareStatement(htmlFormCreateQuery).execute();
 		executeDataSet(DATA_XML);
 	}
-	
-	@Test()
+
+	@Test
 	public void shouldReturnFormList() throws Exception {
-		Encounter encounter = null;
-		encounter = Context.getEncounterService().getEncounter(3);
-		logger.error(encounter);
-		assertEquals(false, encounter == null);
+		MockHttpServletRequest request = new MockHttpServletRequest(RequestMethod.GET.toString(),
+		        "/rest/v1/htmlformentryrest/htmlformslist");
+		request.addHeader("content-type", "application/json");
+		SimpleObject result = deserialize(handle(request));
+		logger.error(result);
+		Assert.assertNotNull(result);
 		//SimpleObject autoGenerationOption = new SimpleObject();
 		//		autoGenerationOption.add("identifierType", IDENTIFIER_TYPE_UUID);
 		//		autoGenerationOption.add("location", LOCATION);
@@ -67,7 +83,7 @@ public class FormListRestControllerTest extends BaseModuleWebContextSensitiveTes
 		//assertEquals(true, newAutoGenerationOption.isAutomaticGenerationEnabled());
 		///assertEquals(false, response.isEmpty());
 	}
-	
+
 	//	public MockHttpServletRequest request(RequestMethod method, String requestURI) {
 	//		MockHttpServletRequest request = new MockHttpServletRequest(method.toString(), "/rest/" + this.getNamespace() + "/" + requestURI);
 	//		request.addHeader("content-type", "application/json");
