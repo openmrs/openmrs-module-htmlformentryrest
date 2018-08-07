@@ -1,17 +1,11 @@
 package org.openmrs.module.htmlformentryrest.web.controller;
 
-import org.apache.commons.beanutils.PropertyUtils;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.Encounter;
 import org.openmrs.api.context.Context;
-//import org.openmrs.module.webservices.rest.SimpleObject;
-//import org.openmrs.module.webservices.rest.web.RestConstants;
-//import org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceController;
-//import org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceControllerTest;
-import org.openmrs.test.BaseContextSensitiveTest;
 import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 //import org.springframework.mock.web.MockHttpServletRequest;
 //import org.springframework.mock.web.MockHttpServletResponse;
@@ -19,15 +13,10 @@ import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 //import org.springframework.web.servlet.HandlerExecutionChain;
 //import org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Iterator;
-
-import static org.junit.Assert.assertEquals;
-
 public class FormListRestControllerTest extends BaseModuleWebContextSensitiveTest {
 	
 	public static final String DATA_XML = "include/HtmlformentryRestTestService-initialData.xml";
-
+	
 	public String getURI() {
 		return "/htmlformentryrest/htmlformslist";
 	}
