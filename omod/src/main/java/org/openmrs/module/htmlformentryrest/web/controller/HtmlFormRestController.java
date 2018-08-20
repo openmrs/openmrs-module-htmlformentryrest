@@ -58,8 +58,9 @@ public class HtmlFormRestController extends HFERBaseRestController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
-	public Object showHtmlForm(HttpSession httpSession, @RequestParam(value = "id", required = false) Integer id)
-	        throws Exception {
+	public Object showHtmlForm(HttpServletRequest request, HttpSession httpSession,
+	        @RequestParam(value = "id", required = false) Integer id) throws Exception {
+		Context.authenticate(request.getParameter("username"), request.getParameter("password"));
 		
 		String previewHtml = null;
 		HtmlForm hf = formBackingObject(id);
